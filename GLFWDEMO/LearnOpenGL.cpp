@@ -1,17 +1,17 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include "Shader.h"
+#include "stb_image.h"
 using namespace std;
 
 
 GLFWwindow* windows;
 // 顶点数据 (x,y,z)
 float verticesNew[] = {
-	0.0f, 0.0f, 0.0f,		//左下
-	0.0f, 1.0f, 0.0f,   	//左上
-	1.0f, 1.0f, 0.0f,       //右上
-	1.0f, 0.0f, 0.0f       //右下  
-
+	-0.5f, -0.5f, 0.0f, 0, 0,		//左下
+	0.5f, -0.5f, 0.0f, 1, 0,         //右下
+	0.5f, 0.5f, 0.0f, 1, 1,         //右上
+	-0.5f, 0.5f, 0.0f, 0, 1   	    //左上
 };
 
 float vertices[] = {
@@ -39,6 +39,12 @@ int main()
 	VAOSet();
 
 	Shader myShader;
+
+	int width, height, nrchannels;
+	unsigned char * data = stbi_load("1.jpg", &width, &height, &nrchannels, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+	glGenerateMipmap(GL_TEXTURE_2D);
+	stbi_image_free(data);
 
 	// 绘制方式 用line方式 默认是gl_file
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -77,25 +83,29 @@ void VAOSet()
 
 	glBufferData(GL_ARRAY_BUFFER, sizeof(verticesNew), verticesNew, GL_STATIC_DRAW);
 	// 告诉 着色器 VBO的结构 - 位置属性 0：VAO的第一个位置 ；3：（xyz）； 值类型： float；  是否标准化 ； 大小-步长； 偏移VBO的位置-- VBO中在前，偏移量为0 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 	// 启用 VAO 的第一个位置
 	glEnableVertexAttribArray(0);
 
-
-	glBindBuffer(GL_ARRAY_BUFFER, VBO[1]);
-	// 数据存放
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-	// 告诉 着色器 VBO的结构 - 位置属性  1：VAO的第二个位置 ；3：（xyz）； 值类型： float；  是否标准化 ； 大小-步长； 偏移VBO的位置-- VBO中在前，偏移量为0 
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*) (3 * sizeof(float)));
 	// 启用 VAO 的第一个位置
 	glEnableVertexAttribArray(1);
 
-	// 告诉 着色器 VBO的结构 - 颜色属性  2：VAO的第三个位置   3：（xyz）； 值类型：  float；   是否标准化 ；  大小-步长； 偏移--在VBO中在后，偏移量为3个float大小
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-	// 启用 VAO 的第二个位置
-	glEnableVertexAttribArray(2);
+
+	//glBindBuffer(GL_ARRAY_BUFFER, VBO[1]);
+	//// 数据存放
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+	//// 告诉 着色器 VBO的结构 - 位置属性  1：VAO的第二个位置 ；3：（xyz）； 值类型： float；  是否标准化 ； 大小-步长； 偏移VBO的位置-- VBO中在前，偏移量为0 
+	//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+	//// 启用 VAO 的第一个位置
+	//glEnableVertexAttribArray(1);
+
+	//// 告诉 着色器 VBO的结构 - 颜色属性  2：VAO的第三个位置   3：（xyz）； 值类型：  float；   是否标准化 ；  大小-步长； 偏移--在VBO中在后，偏移量为3个float大小
+	//glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+	//// 启用 VAO 的第二个位置
+	//glEnableVertexAttribArray(2);
 
 }
 

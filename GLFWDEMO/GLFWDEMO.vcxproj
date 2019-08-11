@@ -124,12 +124,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\glfwTest\glfwTest\glfwTest.cpp" />
-    <ClCompile Include="D:\OpenGL4.6\include\glad\glad.c" />
+    <ClCompile Include="glad.c" />
     <ClCompile Include="LearnOpenGL.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="stb_image.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="stb_image.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="1.jpg" />

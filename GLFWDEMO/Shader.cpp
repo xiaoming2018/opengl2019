@@ -4,22 +4,23 @@ Shader::Shader()
 {
 	// 顶点着色器源码
 	const char* vertexShaderSource = "#version 400 core\n"
-		"layout (location=1) in vec3 aPos;\n"
-		"layout (location=2) in vec3 aColor;\n"
-		"out vec4 ourColor;\n"
+		"layout (location=0) in vec3 aPos;\n"
+		"layout (location=1) in vec2 aTexCoord;\n"
+		"out vec2 TexCoord;\n"
 		"void main()\n"
 		"{\n"
 		"	gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-		"	ourColor = vec4(aColor.x, aColor.y, aColor.z, 1.0);\n"
+		"	TexCoord = aTexCoord ;\n"
 		"}\0";
 
 	// 创建片段字符串  着色器源码
 	const char * fragmentShaderSource = "#version 400 core\n"
 		"out vec4 FragColor;\n"
-		"in vec4 ourColor;\n"
+		"in vec2 TexCoord;\n"
+		"uniform sampler2D ourTexture;\n"
 		"void main()\n"
 		"{\n"
-		"FragColor = ourColor;\n"
+		"FragColor = texture(ourTexture,TexCoord);\n"
 		"}\n\0";
 
 	// 创建顶点色器对象
@@ -48,9 +49,9 @@ Shader::Shader()
 	glDeleteShader(fragmentShader);
 
 	// 获取位置值
-	int vertexColorLocation = glGetUniformLocation(shaderProgram, "myColor");
-	glUseProgram(shaderProgram);   // 使用自定义渲染程序
-	glUniform4f(vertexColorLocation, 1.0f, 0.0f, 0.0f, 1.0f);
+	//int vertexColorLocation = glGetUniformLocation(shaderProgram, "myColor");
+	//glUseProgram(shaderProgram);   // 使用自定义渲染程序
+	//glUniform4f(vertexColorLocation, 1.0f, 0.0f, 0.0f, 1.0f);
 }
 
 void Shader::userShader()
