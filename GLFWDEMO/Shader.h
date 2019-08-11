@@ -6,7 +6,7 @@
 class Shader
 {
 public:
-	int shaderProgram;
+	int ID;
 	void userShader();
 	Shader();
 	~Shader();

@@ -2,6 +2,10 @@
 #include <GLFW/glfw3.h>
 #include "Shader.h"
 #include "stb_image.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>  // 导入 glm 库
+
 using namespace std;
 
 
@@ -34,17 +38,61 @@ void VAOSet();
 
 int main()
 {
+	//// 列向量 表示
+	//glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0f);
+	//glm::mat4 trans = glm::mat4(1.0f);
+	//trans = glm::translate(trans, glm::vec3(1.0f, 1.0f, 0.0f));
+	//vec = trans * vec;
+	//cout << " x: " <<vec.x << vec.y << vec.z << endl;
+
+	glm::mat4 trans = glm::mat4(1.0f);
+	trans = glm::rotate(trans, glm::radians(90.0f),glm::vec3(0.0f,0.0f,1.0f)); // 度数 和 参考轴
+	trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
+
 	// 初始化
 	init();
 	VAOSet();
 
 	Shader myShader;
+	myShader.userShader();
+	glUniformMatrix4fv(glGetUniformLocation(myShader.ID, "transform"),1,GL_FALSE,glm::value_ptr(trans));
 
 	int width, height, nrchannels;
-	unsigned char * data = stbi_load("1.jpg", &width, &height, &nrchannels, 0);
+	unsigned char * data = NULL;
+	stbi_set_flip_vertically_on_load(true);  // 实现y轴的反转
+
+	unsigned int texture[2];
+	glGenTextures(2, texture);
+
+	// 加载第一个纹理
+	glBindTexture(GL_TEXTURE_2D, texture[0]);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER, GL_LINEAR);// 纹理放大时 使用 最近原则过滤
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST); // 纹理缩小时 使用 最近原则过滤
+	data = stbi_load("1.jpg", &width, &height, &nrchannels, 0);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 	glGenerateMipmap(GL_TEXTURE_2D);
 	stbi_image_free(data);
+
+	// 加载第二个纹理 纹理图片太小 会加载错误
+	glBindTexture(GL_TEXTURE_2D, texture[1]);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);// 纹理放大时 使用 最近原则过滤
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); // 纹理缩小时 使用 最近原则过滤
+	data = stbi_load("temp.jpg", &width, &height, &nrchannels, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+	// glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data); // png 格式  带有透明度参数
+	glGenerateMipmap(GL_TEXTURE_2D);
+	stbi_image_free(data);
+
+	myShader.userShader();
+	glUniform1i(glGetUniformLocation(myShader.ID, "ourTexture1"), 0);
+	glUniform1i(glGetUniformLocation(myShader.ID, "ourTexture2"), 1);
+
+	glActiveTexture(GL_TEXTURE0); // 先激活再绑定 纹理单元0 默认是激活的
+	glBindTexture(GL_TEXTURE_2D, texture[0]);
+
+	glActiveTexture(GL_TEXTURE1); // 纹理单元
+	glBindTexture(GL_TEXTURE_2D, texture[1]);
+
 
 	// 绘制方式 用line方式 默认是gl_file
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -54,7 +102,7 @@ int main()
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f); // 设置窗口背景颜色
 		glClear(GL_COLOR_BUFFER_BIT);  //  填充颜色
 
-		myShader.userShader();
+		
 		//glUseProgram(shaderProgram);   // 使用自定义渲染程序
 		//glDrawArrays(GL_TRIANGLES, 0, 3); // 读取三个点，进行绘制 画三角
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
