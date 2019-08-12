@@ -96,14 +96,12 @@ int main()
 
 	// 初始化
 	GLFWwindow* windows = init();
-
 	VAOSet();
 	Shader myShader;
 	texture(&myShader);
 	glfwSetCursorPosCallback(windows, mouse_callback); // 设置光标回调函数
 	glfwSetInputMode(windows, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwSetScrollCallback(windows, scroll_callback);
-
 	glEnable(GL_DEPTH_TEST); // 深度
 
 	// 渲染引擎
@@ -114,25 +112,21 @@ int main()
 		lastFrameTime = currentFrameTime;
 
 		processInput(windows); // wsad 控制处理函数
-
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f); // 设置窗口背景颜色
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  //  填充颜色
 
 		for (size_t i = 0; i < 3; i++)
 		{
 			glm::mat4 trans = glm::mat4(1.0f);
-
 			// 模型矩阵
 			glm::mat4 model = glm::mat4(1.0f);  
 			model = glm::translate(trans, cubePositon[i]); //  平移
 			//model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f)); // 绕x轴旋转 45°
 			model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(0.5f, 1.0f, 0.0f));   // 随时间旋转
-
 			// 视图矩阵
 			glm::mat4 view = glm::mat4(1.0f); // 需要初始化
 			view = camera.GetViewMatirx();
 			//view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-
 			// 投影矩阵
 			glm::mat4 projection = glm::mat4(1.0f);
 			projection = glm::perspective(glm::radians(camera.Fov), 800.0f / 600.0f, 0.1f, 100.0f);
