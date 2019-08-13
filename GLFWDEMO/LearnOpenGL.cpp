@@ -97,7 +97,8 @@ int main()
 	// 初始化
 	GLFWwindow* windows = init();
 	VAOSet();
-	Shader myShader;
+	//Shader myShader;
+	Shader myShader("4.0.shader.vs","4.0.shader.fs");
 	texture(&myShader);
 	glfwSetCursorPosCallback(windows, mouse_callback); // 设置光标回调函数
 	glfwSetInputMode(windows, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
