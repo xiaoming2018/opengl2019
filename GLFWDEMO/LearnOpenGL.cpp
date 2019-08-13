@@ -137,11 +137,11 @@ int main()
 
 			glDrawArrays(GL_TRIANGLES, 0, 36); // 读取三个点，进行绘制 画三角
 		}
-		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
-
-		glfwPollEvents(); // 接受事件
+		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL); //使用索引绘制
 		glfwSwapBuffers(windows);
+		glfwPollEvents(); // 接受事件
 	}
+
 	// 退出 
 	glfwTerminate();
 	return 0;
@@ -207,7 +207,6 @@ void VAOSet()
 	//glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 	//// 启用 VAO 的第二个位置
 	//glEnableVertexAttribArray(2);
-
 }
 
 void texture(Shader *myShader)

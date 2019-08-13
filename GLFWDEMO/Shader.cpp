@@ -29,8 +29,17 @@ Shader::Shader()
 	int vertexShader = glCreateShader(GL_VERTEX_SHADER);
 	// 对象与源码绑定
 	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-	// 编译片元着色器
+	// 编译顶元着色器
 	glCompileShader(vertexShader);
+
+	// check for shader compiler errors
+	int success;
+	char infoLog[512];
+	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+	if (!success) {
+		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+	}
 
 	// 创建片元着色器对象
 	int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
@@ -38,6 +47,14 @@ Shader::Shader()
 	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
 	// 编译片元着色器
 	glCompileShader(fragmentShader);
+
+	// check for shader compile errors
+	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+	if (!success) {
+		glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
+		std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
+	}
+
 
 	// 创建着色器程序
 	ID = glCreateProgram();
@@ -47,6 +64,12 @@ Shader::Shader()
 	// 链接编译着色器程序
 	glLinkProgram(ID);
 
+	// check for linking errors
+	glGetProgramiv(ID, GL_LINK_STATUS, &success);
+	if (!success) {
+		glGetProgramInfoLog(ID, 512, NULL, infoLog);
+		std::cout << "ERROR::SHADER::PROGRAM::LINGKING_FAILED\n" << infoLog << std::endl;
+	}
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
 

@@ -2,7 +2,6 @@
 #include <glad/glad.h>
 #include <iostream>
 
-
 class Shader
 {
 public:
@@ -11,4 +10,3 @@ public:
 	Shader();
 	~Shader();
 };
-
