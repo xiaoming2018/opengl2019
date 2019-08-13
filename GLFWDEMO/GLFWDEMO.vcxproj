@@ -137,6 +137,10 @@
   <ItemGroup>
     <Image Include="1.jpg" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="4.0.shader.fs" />
+    <None Include="4.0.shader.vs" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
