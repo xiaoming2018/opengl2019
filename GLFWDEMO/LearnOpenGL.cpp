@@ -7,9 +7,9 @@
 // 顶点数据 (x,y,z)
 float verticesNew[] = {
 	-0.5f, -0.5f, 0.0f, 0, 0,		//左下
-	0.5f, -0.5f, 0.0f, 1, 0,         //右下
-	0.5f, 0.5f, 0.0f, 1, 1,         //右上
-	-0.5f, 0.5f, 0.0f, 0, 1   	    //左上
+	 0.5f, -0.5f, 0.0f, 1, 0,         //右下
+	 0.5f,  0.5f, 0.0f, 1, 1,         //右上
+	-0.5f,  0.5f, 0.0f, 0, 1   	    //左上
 };
 // 36 顶点 以及 纹理坐标
 float vertices[] = {
@@ -57,9 +57,9 @@ float vertices[] = {
 };
 
 glm::vec3 cubePositon[] ={
-	glm::vec3(0.0f, 0.0f,  0.0f),
-	glm::vec3(2.0f, 5.0f, -15.0f),
-	glm::vec3(-2.0f, 3.0f, -7.5f)
+	glm::vec3( 0.0f, 0.0f,   0.0f),
+	glm::vec3( 2.0f, 5.0f, -15.0f),
+	glm::vec3(-2.0f, 3.0f, -7.50f)
 };
 
 unsigned int indices[] = {
@@ -146,13 +146,11 @@ int main()
 	// 初始化
 	GLFWwindow* windows = init();
 	glEnable(GL_DEPTH_TEST); // 深度
-	Shader lightingShader("1.colors.vs", "1.colors.fs");
-	Shader lampShader("1.lamp.vs", "1.lamp.fs");
 
-	//VAOSet();
-	light_VAO_init();
-	//Shader myShader("4.0.shader.vs","4.0.shader.fs");
-	//texture(&myShader);
+	VAOSet();
+	//light_VAO_init();
+	Shader myShader("4.0.shader.vs","4.0.shader.fs");
+	texture(&myShader);
 
 	// 渲染引擎
 	while (!glfwWindowShouldClose(windows))
@@ -165,36 +163,27 @@ int main()
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f); // 设置窗口背景颜色
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  //  填充颜色
 
-		// be sure to activate shader when setting uniforms/drawing objects
-		lightingShader.userShader();
-		lightingShader.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
-		lightingShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
+		for (size_t i = 0; i < 3; i++)
+		{
+			glm::mat4 trans = glm::mat4(1.0f);
+			// 模型矩阵
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(trans, cubePositon[i]); //  平移
+			//model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f)); // 绕x轴旋转 45°
+			model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(0.5f, 1.0f, 0.0f));   // 随时间旋转
+			// 视图矩阵
+			glm::mat4 view = glm::mat4(1.0f); // 需要初始化
+			view = camera.GetViewMatirx();
+			//view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+			// 投影矩阵
+			glm::mat4 projection = glm::mat4(1.0f);
+			projection = glm::perspective(glm::radians(camera.Zoom), 800.0f / 600.0f, 0.1f, 100.0f);
+			trans = projection * view * model;
 
-		// view/projection transformations
-		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-		glm::mat4 view = camera.GetViewMatirx();
-		lightingShader.setMat4("projection", projection);
-		lightingShader.setMat4("view", view);
-
-		// world transformation
-		glm::mat4 model = glm::mat4(1.0f);
-		lightingShader.setMat4("model", model);
-
-		// render the cube
-		glBindVertexArray(cubeVAO);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
-
-		// also draw the lamp object
-		lampShader.userShader();
-		lampShader.setMat4("projection", projection);
-		lampShader.setMat4("view", view);
-		model = glm::mat4(1.0f);
-		model = glm::translate(model, lightPos);
-		model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
-		lampShader.setMat4("model", model);
-
-		glBindVertexArray(lightVAO);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+			myShader.userShader();
+			glUniformMatrix4fv(glGetUniformLocation(myShader.ID, "transform"), 1, GL_FALSE, glm::value_ptr(trans));
+			glDrawArrays(GL_TRIANGLES, 0, 36); // 读取三个点，进行绘制 画三角
+		}
 
 		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL); //使用索引绘制
 		glfwSwapBuffers(windows);
@@ -315,8 +304,8 @@ void texture(Shader *myShader)
 	stbi_image_free(data);
 
 	myShader->userShader();
-	glUniform1i(glGetUniformLocation(myShader->ID, "ourTexture1"), 0);
-	glUniform1i(glGetUniformLocation(myShader->ID, "ourTexture2"), 1);
+	glUniform1i(glGetUniformLocation(myShader->ID, "ourTexture1"), 0); // 设置纹理单元
+	glUniform1i(glGetUniformLocation(myShader->ID, "ourTexture2"), 1); 
 
 	glActiveTexture(GL_TEXTURE0); // 先激活再绑定 纹理单元0 默认是激活的
 	glBindTexture(GL_TEXTURE_2D, texture[0]);
