@@ -79,7 +79,7 @@ Shader::Shader()
 	//glUniform4f(vertexColorLocation, 1.0f, 0.0f, 0.0f, 1.0f);
 }
 
-Shader::Shader(const char * vertexPath, const char * fragmentPath, const char* geometryPath = nullptr)
+Shader::Shader(const char * vertexPath, const char * fragmentPath, const char* geometryPath)
 {
 	// 1, retrive the vertex/fragment source code from filepath
 	std::string vertexCode;

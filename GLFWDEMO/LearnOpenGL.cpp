@@ -67,8 +67,53 @@ unsigned int indices[] = {
 	1,2,3
 }; // EBO 索引数组
 
+float vertices_light[] = {
+	   -0.5f, -0.5f, -0.5f,
+		0.5f, -0.5f, -0.5f,
+		0.5f,  0.5f, -0.5f,
+		0.5f,  0.5f, -0.5f,
+	   -0.5f,  0.5f, -0.5f,
+	   -0.5f, -0.5f, -0.5f,
+
+	   -0.5f, -0.5f,  0.5f,
+		0.5f, -0.5f,  0.5f,
+		0.5f,  0.5f,  0.5f,
+		0.5f,  0.5f,  0.5f,
+	   -0.5f,  0.5f,  0.5f,
+	   -0.5f, -0.5f,  0.5f,
+
+	   -0.5f,  0.5f,  0.5f,
+	   -0.5f,  0.5f, -0.5f,
+	   -0.5f, -0.5f, -0.5f,
+	   -0.5f, -0.5f, -0.5f,
+	   -0.5f, -0.5f,  0.5f,
+	   -0.5f,  0.5f,  0.5f,
+
+		0.5f,  0.5f,  0.5f,
+		0.5f,  0.5f, -0.5f,
+		0.5f, -0.5f, -0.5f,
+		0.5f, -0.5f, -0.5f,
+		0.5f, -0.5f,  0.5f,
+		0.5f,  0.5f,  0.5f,
+
+	   -0.5f, -0.5f, -0.5f,
+		0.5f, -0.5f, -0.5f,
+		0.5f, -0.5f,  0.5f,
+		0.5f, -0.5f,  0.5f,
+	   -0.5f, -0.5f,  0.5f,
+	   -0.5f, -0.5f, -0.5f,
+
+	   -0.5f,  0.5f, -0.5f,
+		0.5f,  0.5f, -0.5f,
+		0.5f,  0.5f,  0.5f,
+		0.5f,  0.5f,  0.5f,
+	   -0.5f,  0.5f,  0.5f,
+	   -0.5f,  0.5f, -0.5f,
+};
+
 GLFWwindow* init();
 void VAOSet();
+void light_VAO_init();
 void texture(Shader * myShader);
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -80,7 +125,7 @@ const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
 // camera
-Camera camera(glm::vec3(0.0f,0.0f,3.0f));
+Camera camera(glm::vec3(0.0f, 0.0f, 6.0f));
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
@@ -93,17 +138,21 @@ float currentFrameTime = glfwGetTime();
 // lighting 
 glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
 
+//VBO VAO
+unsigned int VBO, cubeVAO, lightVAO;
+
 int main()
 {
 	// 初始化
 	GLFWwindow* windows = init();
-	VAOSet();
-	//Shader myShader;
-	Shader myShader("4.0.shader.vs","4.0.shader.fs");
-	texture(&myShader);
-	glfwSetInputMode(windows, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-	glfwSetScrollCallback(windows, scroll_callback);
 	glEnable(GL_DEPTH_TEST); // 深度
+	Shader lightingShader("1.colors.vs", "1.colors.fs");
+	Shader lampShader("1.lamp.vs", "1.lamp.fs");
+
+	//VAOSet();
+	light_VAO_init();
+	//Shader myShader("4.0.shader.vs","4.0.shader.fs");
+	//texture(&myShader);
 
 	// 渲染引擎
 	while (!glfwWindowShouldClose(windows))
@@ -116,33 +165,45 @@ int main()
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f); // 设置窗口背景颜色
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  //  填充颜色
 
-		for (size_t i = 0; i < 3; i++)
-		{
-			glm::mat4 trans = glm::mat4(1.0f);
-			// 模型矩阵
-			glm::mat4 model = glm::mat4(1.0f);  
-			model = glm::translate(trans, cubePositon[i]); //  平移
-			//model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f)); // 绕x轴旋转 45°
-			model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(0.5f, 1.0f, 0.0f));   // 随时间旋转
-			// 视图矩阵
-			glm::mat4 view = glm::mat4(1.0f); // 需要初始化
-			view = camera.GetViewMatirx();
-			//view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-			// 投影矩阵
-			glm::mat4 projection = glm::mat4(1.0f);
-			projection = glm::perspective(glm::radians(camera.Fov), 800.0f / 600.0f, 0.1f, 100.0f);
-			trans = projection * view * model;
+		// be sure to activate shader when setting uniforms/drawing objects
+		lightingShader.userShader();
+		lightingShader.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
+		lightingShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
 
-			myShader.userShader();
-			glUniformMatrix4fv(glGetUniformLocation(myShader.ID, "transform"), 1, GL_FALSE, glm::value_ptr(trans));
+		// view/projection transformations
+		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+		glm::mat4 view = camera.GetViewMatirx();
+		lightingShader.setMat4("projection", projection);
+		lightingShader.setMat4("view", view);
 
-			glDrawArrays(GL_TRIANGLES, 0, 36); // 读取三个点，进行绘制 画三角
-		}
+		// world transformation
+		glm::mat4 model = glm::mat4(1.0f);
+		lightingShader.setMat4("model", model);
+
+		// render the cube
+		glBindVertexArray(cubeVAO);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+
+		// also draw the lamp object
+		lampShader.userShader();
+		lampShader.setMat4("projection", projection);
+		lampShader.setMat4("view", view);
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, lightPos);
+		model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
+		lampShader.setMat4("model", model);
+
+		glBindVertexArray(lightVAO);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+
 		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL); //使用索引绘制
 		glfwSwapBuffers(windows);
 		glfwPollEvents(); // 接受事件
 	}
-
+	// optional: de-allocate all resources once they've outlived their purpose:
+	glDeleteVertexArrays(1, &cubeVAO);
+	glDeleteVertexArrays(1, &lightVAO);
+	glDeleteBuffers(1, &VBO);
 	// 退出 
 	glfwTerminate();
 	return 0;
@@ -165,6 +226,8 @@ GLFWwindow* init()
 	glfwSetScrollCallback(windows, scroll_callback);   // 
 	glfwSetCursorPosCallback(windows, mouse_callback); // 设置光标回调函数
 
+	// tell GLFW to capture our mouse
+	glfwSetInputMode(windows, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) { //  GLAD 初始化 
 		// 初始化 glad
 		std::cout << "Failed to initialize GLAD" << std::endl;
@@ -199,6 +262,28 @@ void VAOSet()
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 	// 启用 VAO 的第1个位置
 	glEnableVertexAttribArray(1);
+}
+
+void light_VAO_init()
+{
+	// first, configure the cube's VAO (and VBO)
+	glGenVertexArrays(1, &cubeVAO);
+	glGenBuffers(1, &VBO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices_light), vertices_light, GL_STATIC_DRAW);
+	glBindVertexArray(cubeVAO);
+	// position attribute
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+
+	// second, configure the light's VAO (VBO stays the same; the vertices are the same for the light object which is also a 3D cube)
+	glGenVertexArrays(1, &lightVAO);
+	glBindVertexArray(lightVAO);
+	// we only need to bind to the VBO (to link it with glVertexAttribPointer), no need to fill it; the VBO's data already contains all we need (it's already bound, but we do it again for educational purposes)
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
 }
 
 void texture(Shader *myShader)

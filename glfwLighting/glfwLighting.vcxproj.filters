@@ -49,5 +49,11 @@
     <None Include="1.lamp.fs">
       <Filter>Shader</Filter>
     </None>
+    <None Include="1.colors.vs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="1.colors.fs">
+      <Filter>Shader</Filter>
+    </None>
   </ItemGroup>
 </Project>

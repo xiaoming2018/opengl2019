@@ -127,6 +127,8 @@
     <ClInclude Include="..\GLFWDEMO\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="1.colors.fs" />
+    <None Include="1.colors.vs" />
     <None Include="1.lamp.fs" />
     <None Include="1.lamp.vs" />
   </ItemGroup>
