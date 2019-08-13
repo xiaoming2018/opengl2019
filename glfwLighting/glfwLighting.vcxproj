@@ -116,21 +116,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\GLFWDEMO\glad.c" />
-    <ClCompile Include="..\GLFWDEMO\LearnOpenGL.cpp" />
-    <ClCompile Include="..\GLFWDEMO\Shader.cpp" />
-    <ClCompile Include="..\GLFWDEMO\stb_image.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\GLFWDEMO\Camera.h" />
-    <ClInclude Include="..\GLFWDEMO\Shader.h" />
-    <ClInclude Include="..\GLFWDEMO\stb_image.h" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="1.colors.fs" />
     <None Include="1.colors.vs" />
     <None Include="1.lamp.fs" />
     <None Include="1.lamp.vs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="Shader.h" />
+    <ClInclude Include="stb_image.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="glad.c" />
+    <ClCompile Include="LearnOpenGL.cpp" />
+    <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="stb_image.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
