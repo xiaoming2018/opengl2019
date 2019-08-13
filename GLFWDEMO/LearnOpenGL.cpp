@@ -4,8 +4,6 @@
 #include "stb_image.h"
 #include "Camera.h"
 
-using namespace std;
-
 // 顶点数据 (x,y,z)
 float verticesNew[] = {
 	-0.5f, -0.5f, 0.0f, 0, 0,		//左下
@@ -72,14 +70,28 @@ unsigned int indices[] = {
 GLFWwindow* init();
 void VAOSet();
 void texture(Shader * myShader);
+
+void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* windows); // 键盘操作 旋转
 void mouse_callback(GLFWwindow* windows, double xpose, double ypose); // 鼠标操作
 void scroll_callback(GLFWwindow* windows, double xoffset, double yoffset); //滚轴操作 
 
-Camera camera;
+const unsigned int SCR_WIDTH = 800;
+const unsigned int SCR_HEIGHT = 600;
+
+// camera
+Camera camera(glm::vec3(0.0f,0.0f,3.0f));
+float lastX = SCR_WIDTH / 2.0f;
+float lastY = SCR_HEIGHT / 2.0f;
+bool firstMouse = true;
+
+// timing
 float deltaTime = 0.0f;
 float lastFrameTime = 0.0f;
 float currentFrameTime = glfwGetTime();
+
+// lighting 
+glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
 
 int main()
 {
@@ -89,7 +101,6 @@ int main()
 	//Shader myShader;
 	Shader myShader("4.0.shader.vs","4.0.shader.fs");
 	texture(&myShader);
-	glfwSetCursorPosCallback(windows, mouse_callback); // 设置光标回调函数
 	glfwSetInputMode(windows, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwSetScrollCallback(windows, scroll_callback);
 	glEnable(GL_DEPTH_TEST); // 深度
@@ -146,13 +157,17 @@ GLFWwindow* init()
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); // 设置核心模式
 	windows = glfwCreateWindow(800, 600, "OPENGL - LEARN", NULL, NULL);
 	if (windows == NULL) {
-		cout << "Failed to create GLFW window" << endl;
+		std::cout << "Failed to create GLFW window" << std::endl;
 		glfwTerminate();
 	}
 	glfwMakeContextCurrent(windows); // 上下文关联 windows
+	glfwSetFramebufferSizeCallback(windows, framebuffer_size_callback);
+	glfwSetScrollCallback(windows, scroll_callback);   // 
+	glfwSetCursorPosCallback(windows, mouse_callback); // 设置光标回调函数
+
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) { //  GLAD 初始化 
 		// 初始化 glad
-		cout << "Failed to initialize GLAD" << endl;
+		std::cout << "Failed to initialize GLAD" << std::endl;
 	}
 	return windows;
 }
@@ -225,31 +240,40 @@ void texture(Shader *myShader)
 	glBindTexture(GL_TEXTURE_2D, texture[1]);
 }
 
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+	// make sure the viewport matches the new window dimensions; note that width and 
+	// height will be significantly larger than specified on retina displays.
+	glViewport(0, 0, width, height);
+}
+
 //键盘 转换相机位置（视角）
 void processInput(GLFWwindow* windows)
 {
 	if (glfwGetKey(windows, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 		glfwSetWindowShouldClose(windows, true); // esc 退出窗口
 	}
-	float cameraSpeed = 2.5f * deltaTime;
-	if (glfwGetKey(windows, GLFW_KEY_W) == GLFW_PRESS) {
-		camera.Positon += cameraSpeed * (camera.Front);
-	}
-	if (glfwGetKey(windows, GLFW_KEY_S) == GLFW_PRESS) {
-		camera.Positon -= cameraSpeed * (camera.Front);
-	}
-	if (glfwGetKey(windows, GLFW_KEY_A) == GLFW_PRESS) {
-		camera.Positon -= glm::normalize(glm::cross(camera.Front, camera.Up)) * cameraSpeed;
-	}
-	if (glfwGetKey(windows, GLFW_KEY_D) == GLFW_PRESS) {
-		camera.Positon += glm::normalize(glm::cross(camera.Front, camera.Up)) * cameraSpeed;
-	}
+
+	// Camrea Proceckeyboard 函数
+	if (glfwGetKey(windows, GLFW_KEY_W) == GLFW_PRESS)
+		camera.ProcessKeyboard(FORWARD, deltaTime);
+	if (glfwGetKey(windows, GLFW_KEY_S) == GLFW_PRESS)
+		camera.ProcessKeyboard(BACKWARD, deltaTime);
+	if (glfwGetKey(windows, GLFW_KEY_A) == GLFW_PRESS)
+		camera.ProcessKeyboard(LEFT, deltaTime);
+	if (glfwGetKey(windows, GLFW_KEY_D) == GLFW_PRESS)
+		camera.ProcessKeyboard(RIGHT, deltaTime);
 }
 
 // 鼠标回调函数
 void mouse_callback(GLFWwindow* windows, double xpose, double ypose)
 {
-	static float lastX = 800.0f / 2, lastY = 600.0f / 2, xoffset = 0.0f, yoffset = 0.0f;
+	static float xoffset = 0.0f, yoffset = 0.0f;
+	if (firstMouse) {
+		lastX = xpose;
+		lastY = ypose;
+		firstMouse = false;
+	}
 	xoffset = xpose - lastX;
 	yoffset = lastY - ypose;  // 屏幕坐标时 左上为原点
 	lastX = xpose ;
