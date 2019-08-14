@@ -24,10 +24,10 @@
     <None Include="1.lamp.fs">
       <Filter>Shader</Filter>
     </None>
-    <None Include="1.colors.vs">
+    <None Include="1.cube.fs">
       <Filter>Shader</Filter>
     </None>
-    <None Include="1.colors.fs">
+    <None Include="1.cube.vs">
       <Filter>Shader</Filter>
     </None>
   </ItemGroup>
@@ -55,5 +55,16 @@
     <ClCompile Include="stb_image.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="container2.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="container2_specular.png">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="lighting_maps_specular_color.png">
+      <Filter>资源文件</Filter>
+    </Image>
   </ItemGroup>
 </Project>

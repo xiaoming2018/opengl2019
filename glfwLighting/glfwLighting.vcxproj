@@ -116,8 +116,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="1.colors.fs" />
-    <None Include="1.colors.vs" />
+    <None Include="1.cube.fs" />
+    <None Include="1.cube.vs" />
     <None Include="1.lamp.fs" />
     <None Include="1.lamp.vs" />
   </ItemGroup>
@@ -131,6 +131,11 @@
     <ClCompile Include="LearnOpenGL.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="stb_image.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="container2.png" />
+    <Image Include="container2_specular.png" />
+    <Image Include="lighting_maps_specular_color.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
