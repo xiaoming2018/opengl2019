@@ -69,8 +69,10 @@ bool firstMouse = true;
 float deltaTime = 0.0f;
 float lastFrameTime = 0.0f;
 float currentFrameTime = glfwGetTime();
+
 // lighting 
-glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
+//glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
+glm::vec3 lightPos(2.0f, 0.0f, 0.0f);
 //VBO VAO
 unsigned int VBO, cubeVAO, lightVAO;
 int main()
@@ -98,8 +100,9 @@ int main()
 		lightingShader.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
 		lightingShader.setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
 		//lightingShader.setVec3("lightPos", 1.0f + sin(glfwGetTime()) * 2.0f, sin(glfwGetTime() / 2.0f) * 1.0f, sin(glfwGetTime()) * 1.3f);
-		lightingShader.setVec3("lightPos", lightPos);
+		lightingShader.setVec4("lightPos", glm::vec4(lightPos,1));
 		lightingShader.setVec3("viewPos", camera.Position);
+		lightingShader.setVec3("front", camera.Front);
 
 		// view/projection transformations
 		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
@@ -109,11 +112,19 @@ int main()
 
 		// world transformation
 		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
 		model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(1.0f, 1.0f, 0.0f));
 		lightingShader.setMat4("model", model);
 
 		// render the cube
 		glBindVertexArray(cubeVAO);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+        
+		//µÚ¶þ¸öcube
+		glm::mat4 trans = glm::mat4(1.0f);
+		model = glm::translate(trans, glm::vec3(-2.0f, 1.0f, 0.0f));
+		//model = glm::rotate(model,glm::radians(-55.0f), glm::vec3(1.0f, 1.0f, 0.0f));
+		lightingShader.setMat4("model", model);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
 		// also draw the lamp object
