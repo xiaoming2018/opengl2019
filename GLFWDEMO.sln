@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLFWDEMO", "GLFWDEMO\GLFWDE
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "glfwLighting", "glfwLighting\glfwLighting.vcxproj", "{A02ED607-2990-456E-A4D1-FB485486DA0D}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "glfwModel", "glfwModel\glfwModel.vcxproj", "{6EE74CE1-438C-4E8D-B55A-7424C2FC60FD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -31,6 +33,14 @@ Global
 		{A02ED607-2990-456E-A4D1-FB485486DA0D}.Release|x64.Build.0 = Release|x64
 		{A02ED607-2990-456E-A4D1-FB485486DA0D}.Release|x86.ActiveCfg = Release|Win32
 		{A02ED607-2990-456E-A4D1-FB485486DA0D}.Release|x86.Build.0 = Release|Win32
+		{6EE74CE1-438C-4E8D-B55A-7424C2FC60FD}.Debug|x64.ActiveCfg = Debug|x64
+		{6EE74CE1-438C-4E8D-B55A-7424C2FC60FD}.Debug|x64.Build.0 = Debug|x64
+		{6EE74CE1-438C-4E8D-B55A-7424C2FC60FD}.Debug|x86.ActiveCfg = Debug|Win32
+		{6EE74CE1-438C-4E8D-B55A-7424C2FC60FD}.Debug|x86.Build.0 = Debug|Win32
+		{6EE74CE1-438C-4E8D-B55A-7424C2FC60FD}.Release|x64.ActiveCfg = Release|x64
+		{6EE74CE1-438C-4E8D-B55A-7424C2FC60FD}.Release|x64.Build.0 = Release|x64
+		{6EE74CE1-438C-4E8D-B55A-7424C2FC60FD}.Release|x86.ActiveCfg = Release|Win32
+		{6EE74CE1-438C-4E8D-B55A-7424C2FC60FD}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
