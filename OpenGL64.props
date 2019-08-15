@@ -3,12 +3,12 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-    <IncludePath>D:\OpenGL4.6\include;D:\OpenGL4.6\include\KHR;D:\OpenGL4.6\include\GLFW;D:\OpenGL4.6\include\glad;$(IncludePath)</IncludePath>
+    <IncludePath>D:\OpenGL4.6\include\assimp;D:\OpenGL4.6\include;D:\OpenGL4.6\include\KHR;D:\OpenGL4.6\include\GLFW;D:\OpenGL4.6\include\glad;$(IncludePath)</IncludePath>
     <LibraryPath>D:\OpenGL4.6\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <Link>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp-vc141-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup />

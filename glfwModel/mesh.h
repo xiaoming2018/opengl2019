@@ -63,8 +63,9 @@ public:
 			glBindTexture(GL_TEXTURE_2D, textures[i].id);
 		}
 		shader.userShader();
+		glBindVertexArray(VAO);
 		//glDrawArrays(GL_TRIANGLES, 0, 36);
-		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 	}
 
 private:
