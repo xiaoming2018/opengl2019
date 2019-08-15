@@ -79,12 +79,9 @@ int main()
 	Shader lightingShader("1.cube.vs", "1.cube.fs");
 
 	//Mesh mesh = processMesh();
-	char path[255] = "F:/Program/Visual Studio 2017/projects/GLFWDEMO/glfwModel/nanosuit/nanosuit.obj";
-	Model ourModel(path);
+	//char path[255] = "F:/Program/Visual Studio 2017/projects/GLFWDEMO/glfwModel/nanosuit/nanosuit.obj";
+	Model ourModel("nanosuit/nanosuit.obj");
 
-	// model ¿‡
-	// Model ourModel;
-	
 	while (!glfwWindowShouldClose(windows))
 	{
 		currentFrameTime = glfwGetTime();

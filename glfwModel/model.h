@@ -34,6 +34,9 @@ public:
 	{
 		loadModel(path);
 	}
+	Model(string path) {
+		loadModel(path);
+	}
 	void Draw(Shader shader) 
 	{
 		 for(unsigned int i = 0; i < meshes.size(); i++)
