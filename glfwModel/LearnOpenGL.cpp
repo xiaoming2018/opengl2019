@@ -75,7 +75,9 @@ int main()
 {
 	// 初始化
 	GLFWwindow* windows = init();
-	glEnable(GL_DEPTH_TEST); // 深度
+	
+	// config global opengl state
+	glEnable(GL_DEPTH_TEST); // 深度缓冲
 	Shader lightingShader("1.cube.vs", "1.cube.fs");
 
 	//Mesh mesh = processMesh();
