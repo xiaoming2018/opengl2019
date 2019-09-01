@@ -100,7 +100,7 @@ int main()
 
 		processInput(windows); // wsad 控制处理函数
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f); // 设置窗口背景颜色
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  //  填充颜色
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);  // 清除缓存
 
 		// be sure to activate shader when setting uniforms/drawing objects
 		lightingShader.userShader();
