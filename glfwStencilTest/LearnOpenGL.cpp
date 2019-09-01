@@ -123,10 +123,14 @@ int main()
 		model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(1.0f, 1.0f, 0.0f));
 		lightingShader.setMat4("model", model);
 
+		// 1st render pasee draw object as normal writing to the stencil buffer
+		glStencilFunc(GL_ALWAYS, 1, 0xFF);
+		glStencilMask(0xFF);
+
 		// render the cube
 		glBindVertexArray(cubeVAO);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
-        
+       
 		//第二个cube
 		glm::mat4 trans = glm::mat4(1.0f);
 		model = glm::translate(trans, glm::vec3(-2.0f, 1.0f, 0.0f));
@@ -134,7 +138,20 @@ int main()
 		lightingShader.setMat4("model", model);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
-		// also draw the lamp object
+		// 2nd render pass: =================== 缩放绘制边缘
+		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+		glStencilMask(0x00);
+		glDisable(GL_DEPTH_TEST);
+		float scale = 1.1;
+		glm::mat4 trans2 = glm::mat4(1.0f);
+		model = glm::translate(trans2, glm::vec3(-2.0f, 1.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(scale, scale, scale));
+		lightingShader.setMat4("model", model);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+		glStencilMask(0xFF);
+		glEnable(GL_DEPTH_TEST);
+
+		// draw the lamp object
 		lampShader.userShader();
 		lampShader.setMat4("projection", projection);
 		lampShader.setMat4("view", view);
