@@ -58,8 +58,8 @@ void processInput(GLFWwindow* windows); // 键盘操作 旋转
 void mouse_callback(GLFWwindow* windows, double xpose, double ypose); // 鼠标操作
 void scroll_callback(GLFWwindow* windows, double xoffset, double yoffset); //滚轴操作 
 
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+const unsigned int SCR_WIDTH = 1280;
+const unsigned int SCR_HEIGHT = 720;
 // camera
 Camera camera(glm::vec3(0.0f, 0.0f, 6.0f));
 float lastX = SCR_WIDTH / 2.0f;
@@ -79,7 +79,14 @@ int main()
 {
 	// 初始化
 	GLFWwindow* windows = init();
-	glEnable(GL_DEPTH_TEST); // 深度
+
+	// configure global opengl state
+	glEnable(GL_DEPTH_TEST); // 深度测试
+	glDepthFunc(GL_LESS); // 在片段深度值小于缓冲的深度值时通过测试
+	glEnable(GL_STENCIL_TEST);  // 模板测试
+	glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+
 	Shader lightingShader("1.cube.vs", "1.cube.fs");
 	Shader lampShader("1.lamp.vs", "1.lamp.fs");
 	light_VAO_init();
