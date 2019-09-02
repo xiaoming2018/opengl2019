@@ -82,10 +82,9 @@ int main()
 
 	// configure global opengl state
 	glEnable(GL_DEPTH_TEST); // 深度测试
-	glDepthFunc(GL_LESS); // 在片段深度值小于缓冲的深度值时通过测试
+	glDepthFunc(GL_LESS); // 在片段深度值小于缓冲的深度值时通过测试 默认值
 	glEnable(GL_STENCIL_TEST);  // 模板测试
-	glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE); // 模板测试和深度测试都通过，希望将储存的模板值设置为参考值， 使用glStencilFunc()函数进行设置
 
 	Shader lightingShader("1.cube.vs", "1.cube.fs");
 	Shader lampShader("1.lamp.vs", "1.lamp.fs");
@@ -125,7 +124,7 @@ int main()
 
 		// 1st render pasee draw object as normal writing to the stencil buffer
 		glStencilFunc(GL_ALWAYS, 1, 0xFF);
-		glStencilMask(0xFF);
+		glStencilMask(0xFF); // 启用模板写入
 
 		// render the cube
 		glBindVertexArray(cubeVAO);
@@ -139,9 +138,9 @@ int main()
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
 		// 2nd render pass: =================== 缩放绘制边缘
-		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-		glStencilMask(0x00);
-		glDisable(GL_DEPTH_TEST);
+		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);  
+		glStencilMask(0x00); // 禁止模板缓冲写入
+
 		float scale = 1.1;
 		glm::mat4 trans2 = glm::mat4(1.0f);
 		model = glm::translate(trans2, glm::vec3(-2.0f, 1.0f, 0.0f));
@@ -149,7 +148,6 @@ int main()
 		lightingShader.setMat4("model", model);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 		glStencilMask(0xFF);
-		glEnable(GL_DEPTH_TEST);
 
 		// draw the lamp object
 		lampShader.userShader();
