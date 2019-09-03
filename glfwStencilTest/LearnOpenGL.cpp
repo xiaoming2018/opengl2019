@@ -86,6 +86,10 @@ int main()
 	glEnable(GL_STENCIL_TEST);  // 模板测试
 	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE); // 模板测试和深度测试都通过，希望将储存的模板值设置为参考值， 使用glStencilFunc()函数进行设置
 
+	// 剔除面
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+
 	Shader lightingShader("1.cube.vs", "1.cube.fs");
 	Shader lampShader("1.lamp.vs", "1.lamp.fs");
 	light_VAO_init();
@@ -242,7 +246,7 @@ void texture(Shader *myShader)
 
 	// 加载第一个纹理
 	glBindTexture(GL_TEXTURE_2D, texture[0]);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);// 纹理放大时 使用 最近原则过滤
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);// 纹理放大时 使用 线性原则过滤
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); // 纹理缩小时 使用 最近原则过滤
 	data = stbi_load("container2.png", &width, &height, &nrchannels, 0);
 	GLenum format;
