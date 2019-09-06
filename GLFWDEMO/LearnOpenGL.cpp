@@ -214,9 +214,9 @@ GLFWwindow* init()
 	glfwSetFramebufferSizeCallback(windows, framebuffer_size_callback);
 	glfwSetScrollCallback(windows, scroll_callback);   // 
 	glfwSetCursorPosCallback(windows, mouse_callback); // 设置光标回调函数
-
 	// tell GLFW to capture our mouse
 	glfwSetInputMode(windows, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) { //  GLAD 初始化 
 		// 初始化 glad
 		std::cout << "Failed to initialize GLAD" << std::endl;
@@ -226,7 +226,7 @@ GLFWwindow* init()
 
 void VAOSet()
 {
-	unsigned int VBO, VAO, EBO; // ID 号
+	unsigned int VBO, VAO, EBO; // I顶点数组对象   顶点缓冲对象
 
 	// 生成 VAO 
 	glGenVertexArrays(1, &VAO);
