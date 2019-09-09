@@ -417,5 +417,4 @@ unsigned int LoadTexture(char const * path)
 		stbi_image_free(data);
 	}
 	return textureID;
-
 }
