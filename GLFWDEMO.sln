@@ -15,6 +15,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "glfwFrameBuffers", "glfwFra
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Cubemaps", "Cubemaps\Cubemaps.vcxproj", "{14D78366-F41A-4A58-80A8-AD7251229A70}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GeometryShader", "GeometryShader\GeometryShader.vcxproj", "{3CEFBF07-57F2-4155-AF9C-D6FCAA8FA697}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -71,6 +73,14 @@ Global
 		{14D78366-F41A-4A58-80A8-AD7251229A70}.Release|x64.Build.0 = Release|x64
 		{14D78366-F41A-4A58-80A8-AD7251229A70}.Release|x86.ActiveCfg = Release|Win32
 		{14D78366-F41A-4A58-80A8-AD7251229A70}.Release|x86.Build.0 = Release|Win32
+		{3CEFBF07-57F2-4155-AF9C-D6FCAA8FA697}.Debug|x64.ActiveCfg = Debug|x64
+		{3CEFBF07-57F2-4155-AF9C-D6FCAA8FA697}.Debug|x64.Build.0 = Debug|x64
+		{3CEFBF07-57F2-4155-AF9C-D6FCAA8FA697}.Debug|x86.ActiveCfg = Debug|Win32
+		{3CEFBF07-57F2-4155-AF9C-D6FCAA8FA697}.Debug|x86.Build.0 = Debug|Win32
+		{3CEFBF07-57F2-4155-AF9C-D6FCAA8FA697}.Release|x64.ActiveCfg = Release|x64
+		{3CEFBF07-57F2-4155-AF9C-D6FCAA8FA697}.Release|x64.Build.0 = Release|x64
+		{3CEFBF07-57F2-4155-AF9C-D6FCAA8FA697}.Release|x86.ActiveCfg = Release|Win32
+		{3CEFBF07-57F2-4155-AF9C-D6FCAA8FA697}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
