@@ -120,6 +120,14 @@
     <None Include="1.cube.vs" />
     <None Include="1.lamp.fs" />
     <None Include="1.lamp.vs" />
+    <None Include="default.fs" />
+    <None Include="default.vs" />
+    <None Include="geometry_shader.fs" />
+    <None Include="geometry_shader.gs" />
+    <None Include="geometry_shader.vs" />
+    <None Include="normal_visualization.fs" />
+    <None Include="normal_visualization.gs" />
+    <None Include="normal_visualization.vs" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />

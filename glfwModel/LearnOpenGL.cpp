@@ -78,10 +78,13 @@ int main()
 	
 	// config global opengl state
 	glEnable(GL_DEPTH_TEST); // 深度缓冲
-	Shader lightingShader("1.cube.vs", "1.cube.fs");
-
+	//Shader lightingShader("1.cube.vs", "1.cube.fs");
+	//Shader shader("geometry_shader.vs","geometry_shader.fs","geometry_shader.gs");
 	//Mesh mesh = processMesh();
-	//char path[255] = "F:/Program/Visual Studio 2017/projects/GLFWDEMO/glfwModel/nanosuit/nanosuit.obj";
+
+	Shader shader("default.vs", "default.fs");
+	Shader normalShader("normal_visualization.vs", "normal_visualization.fs", "normal_visualization.gs");
+
 	Model ourModel("nanosuit/nanosuit.obj");
 
 	while (!glfwWindowShouldClose(windows))
@@ -94,29 +97,47 @@ int main()
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f); // 设置窗口背景颜色
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  //  填充颜色
 
-		// be sure to activate shader when setting uniforms/drawing objects
-		lightingShader.userShader();
-		lightingShader.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
-		lightingShader.setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
-		lightingShader.setVec4("lightPos", glm::vec4(5.0f,0.0f,0.0f, 1));
-		lightingShader.setVec3("viewPos", camera.Position);
-		lightingShader.setVec3("front", camera.Front);
+		//// be sure to activate shader when setting uniforms/drawing objects
+		//lightingShader.userShader();
+		//lightingShader.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
+		//lightingShader.setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
+		//lightingShader.setVec4("lightPos", glm::vec4(5.0f,0.0f,0.0f, 1));
+		//lightingShader.setVec3("viewPos", camera.Position);
+		//lightingShader.setVec3("front", camera.Front);
 
-		// view/projection transformations
-		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+		//// view/projection transformations
+		//glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+		//glm::mat4 view = camera.GetViewMatirx();
+		//lightingShader.setMat4("projection", projection);
+		//lightingShader.setMat4("view", view);
+
+		//// world transformation
+		//glm::mat4 model = glm::mat4(1.0f);
+		//model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+		//model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+		//model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
+		//lightingShader.setMat4("model", model);
+		//
+		////mesh.Draw(lightingShader);
+		//ourModel.Draw(lightingShader);
+
+		glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 		glm::mat4 view = camera.GetViewMatirx();
-		lightingShader.setMat4("projection", projection);
-		lightingShader.setMat4("view", view);
-
-		// world transformation
 		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
-		model = glm::rotate(model, (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
-		lightingShader.setMat4("model", model);
-		
-		//mesh.Draw(lightingShader);
-		ourModel.Draw(lightingShader);
+		shader.userShader();
+		shader.setMat4("projection", projection);
+		shader.setMat4("view", view);
+		shader.setMat4("model", model);
+
+		// draw model as usual
+		ourModel.Draw(shader);
+
+		normalShader.userShader();
+		normalShader.setMat4("projection", projection);
+		normalShader.setMat4("view", view);
+		normalShader.setMat4("model", model);
+
+		ourModel.Draw(normalShader);
 
 		glfwSwapBuffers(windows);
 		glfwPollEvents(); // 接受事件

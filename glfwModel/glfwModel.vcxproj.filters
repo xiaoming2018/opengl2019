@@ -30,6 +30,30 @@
     <None Include="1.lamp.vs">
       <Filter>Shader</Filter>
     </None>
+    <None Include="geometry_shader.fs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="geometry_shader.gs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="geometry_shader.vs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="default.vs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="default.fs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="normal_visualization.vs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="normal_visualization.fs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="normal_visualization.gs">
+      <Filter>Shader</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
